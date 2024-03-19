@@ -87,7 +87,7 @@ with ui.accordion():
         @render.plot(alt="Seaborn Histogram")
         def seaborn_histogram():
             bins = input.seaborn_bin_count()
-            ax = sns.histplot(data=penguins_df, x="body_mass_g", bins=bins, hue="species")
+            ax = sns.histplot(data=filtered_data(), x="body_mass_g", bins=bins, hue="species")
             ax.set_title("Palmer Penguins")
             ax.set_xlabel("Mass")
             ax.set_ylabel("Count")
