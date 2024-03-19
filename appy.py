@@ -2,14 +2,13 @@ import plotly.express as px
 from shiny.express import input, ui, render
 from shiny import render, reactive
 from shinywidgets import render_plotly
-import palmerpenguins  # This package provides palmer penguins dataset
+import palmerpenguins
 import seaborn as sns
 
 penguins_df = palmerpenguins.load_penguins()
 
 ui.page_opts(title="Suarez Penguin Data", fillable=True)
 
-# Adds a shiny ui sidebar for user interaction
 with ui.sidebar(open="open"):
     ui.h2("Sidebar")
 
@@ -46,7 +45,7 @@ with ui.layout_columns(col_widths=(20, 80)):
 
         @render.data_frame
         def penguins_datatable():
-            return render.DataTable(penguins_df)
+            return render.DataTable(filtered_data())
 
     with ui.card(full_screen=True):
 
@@ -54,7 +53,7 @@ with ui.layout_columns(col_widths=(20, 80)):
 
         @render.data_frame
         def penguins_data():
-            return render.DataGrid(penguins_df)
+            return render.DataGrid(filtered_data())
 
 with ui.layout_columns(col_widths=(20, 80)):
     with ui.card(full_screen=True):
@@ -62,7 +61,7 @@ with ui.layout_columns(col_widths=(20, 80)):
 
         @render_plotly
         def plotly_histogram():
-            return px.histogram(penguins_df, x="species", color="species")
+            return px.histogram(filtered_data(), x="species", color="species")
 
     with ui.card(full_screen=True):
 
@@ -71,7 +70,7 @@ with ui.layout_columns(col_widths=(20, 80)):
         @render_plotly
         def plotly_scatterplot():
             return px.scatter(
-                penguins_df,
+                filtered_data(),
                 title="Plotly Scatter Plot",
                 x="body_mass_g",
                 y="bill_depth_mm",
@@ -92,14 +91,6 @@ with ui.accordion():
             ax.set_xlabel("Mass")
             ax.set_ylabel("Count")
             return ax
-# --------------------------------------------------------
-# Reactive calculations and effects
-# --------------------------------------------------------
-
-# Add a reactive calculation to filter the data
-# By decorating the function with @reactive, we can use the function to filter the data
-# The function will be called whenever an input functions used to generate that output changes.
-# Any output that depends on the reactive function (e.g., filtered_data()) will be updated when the data changes.
 
 @reactive.calc
 def filtered_data():
