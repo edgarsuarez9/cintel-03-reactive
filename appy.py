@@ -38,7 +38,7 @@ with ui.sidebar(open="open"):
         target="_blank",
     )
 
-with ui.layout_columns(col_widths=(20, 80)):
+with ui.layout_columns():
     with ui.card(full_screen=True):
 
         ui.h4("Palmer Penguins Data Table")
@@ -63,10 +63,18 @@ with ui.layout_columns(col_widths=(20, 80)):
         def plotly_histogram():
             return px.histogram(filtered_data(), x="species", color="species")
 
-    with ui.card(full_screen=True):
+with ui.accordion():
+    with ui.accordion_panel(title="Seaborn Histogram", full_screen=True):
+        @render.plot(alt="Seaborn Histogram")
+        def seaborn_histogram():
+            bins = input.seaborn_bin_count()
+            ax = sns.histplot(data=filtered_data(), x="body_mass_g", bins=bins, hue="species")
+            ax.set_title("Palmer Penguins")
+            ax.set_xlabel("Mass")
+            ax.set_ylabel("Count")
+            return ax
 
-        ui.card_header("Plotly Scatterplot: Species")
-
+    with ui.accordion_panel(title="Plotly Scatter Plot", full_screen=True):
         @render_plotly
         def plotly_scatterplot():
             return px.scatter(
@@ -80,17 +88,6 @@ with ui.layout_columns(col_widths=(20, 80)):
                     "body_mass_g": "Body Mass (g)",
                 },
             )
-
-with ui.accordion():
-    with ui.accordion_panel(title="Seaborn Histogram", full_screen=True):
-        @render.plot(alt="Seaborn Histogram")
-        def seaborn_histogram():
-            bins = input.seaborn_bin_count()
-            ax = sns.histplot(data=filtered_data(), x="body_mass_g", bins=bins, hue="species")
-            ax.set_title("Palmer Penguins")
-            ax.set_xlabel("Mass")
-            ax.set_ylabel("Count")
-            return ax
 
 @reactive.calc
 def filtered_data():
