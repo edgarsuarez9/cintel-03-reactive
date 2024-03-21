@@ -4,6 +4,7 @@ from shiny import render, reactive
 from shinywidgets import render_plotly
 import palmerpenguins
 import seaborn as sns
+import pandas as pd
 
 penguins_df = palmerpenguins.load_penguins()
 
@@ -91,4 +92,4 @@ with ui.accordion():
 
 @reactive.calc
 def filtered_data():
-    return penguins_df
+    return penguins_df[penguins_df["species"].isin(input.Selected_Species_list())]
