@@ -5,8 +5,11 @@ from shinywidgets import render_plotly
 import palmerpenguins
 import seaborn as sns
 import pandas as pd
+import shinyswatch
 
 penguins_df = palmerpenguins.load_penguins()
+
+shinyswatch.theme.lumen()
 
 ui.page_opts(title="Suarez Penguin Data", fillable=True)
 
